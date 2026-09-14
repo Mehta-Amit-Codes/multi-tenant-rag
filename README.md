@@ -110,13 +110,3 @@ streamlit_app.py         # UI: onboarding, ingest, query, usage dashboard
 db_init.sql              # pgvector extension + RLS policies + indexes
 docker-compose.yml
 ```
-
-## What's intentionally left as an exercise (stretch goals)
-
-- Per-tenant embedding model choice + a cost/quality dashboard (schema
-  already supports `tenant.embedding_model`; just plug in a second model
-  and compare eval scores).
-- PDF/DOCX text extraction upstream of `/documents` (currently accepts
-  pre-extracted text for simplicity).
-- Async ingestion via Celery/RQ for large documents instead of the
-  synchronous embed-on-request-thread shown here.
