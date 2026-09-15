@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_USER: rag
+      POSTGRES_PASSWORD: rag
+      POSTGRES_DB: rag
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    build: .
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgresql+psycopg://rag:rag@postgres:5432/rag
+      REDIS_URL: redis://redis:6379/0
+      GROK_API_KEY: ${GROK_API_KEY}
+      LLM_MODEL: grok-4
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata:
