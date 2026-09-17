@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 
+from dotenv import load_dotenv
+load_dotenv()  # loads .env for local `uvicorn` runs; no-op under Docker Compose
+
 from app.routers import ingestion, onboarding, query, usage
 
 app = FastAPI(
