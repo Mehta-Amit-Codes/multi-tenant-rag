@@ -1,5 +1,7 @@
 # Multi-Tenant RAG-as-a-Service
 
+[![Diagram](https://img.shields.io/badge/gitdiagram-view%20architecture-blue)](https://gitdiagram.com/mehta-amit-codes/multi-tenant-rag)
+
 Reference implementation of the "Multi-Tenant RAG-as-a-Service" blueprint:
 tenant isolation, onboarding, incremental ingestion, usage metering, rate
 limiting, and API-key auth.
@@ -18,7 +20,9 @@ Two independent layers, so a bug in one doesn't cause a leak:
 ## Run it
 
 ```bash
-export GROK_API_KEY=xai-...
+cp .env.example .env
+# then edit .env and fill in your real GROK_API_KEY
+
 docker compose up -d postgres redis
 pip install -r requirements.txt
 
@@ -27,6 +31,10 @@ psql postgresql://rag:rag@localhost:5432/rag -f db_init.sql
 
 uvicorn app.main:app --reload
 ```
+
+`.env` is loaded automatically (via `python-dotenv`) by `main.py`, `scripts/create_tables.py`, and `streamlit_app.py` — no need to `export` variables manually in each terminal. It's git-ignored, so never commit it; `.env.example` documents every variable the app reads.
+
+If you run everything through `docker compose up` instead (including the `api` service), Compose injects `GROK_API_KEY` from your shell environment via `${GROK_API_KEY}` in `docker-compose.yml` — either export it in your shell first, or Compose also auto-reads a `.env` file in the project root for variable substitution, so the same `.env` works for both paths.
 
 ## Walkthrough
 
